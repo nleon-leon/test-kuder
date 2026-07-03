@@ -9,7 +9,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, Tabl
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 
-# Importamos la base de datos que ya tienes en tu otro archivo
+# Importamos la base de datos de preguntas
 from preguntas import TRIADAS_KUDER
 
 # Configuración estética del sitio institucional
@@ -94,13 +94,14 @@ def generar_pdf_reportlab(nombre, colegio, curso, lista_top_areas):
     story.append(Spacer(1, 15))
     
     story.append(Paragraph("<b>ÁREAS VOCACIONALES CON MAYOR AFINIDAD</b>", style_header1))
-    story.append(Paragraph("Las siguientes áreas obtuvieron los puntajes porcentuales más destacados en tu cuestionario. Indican actividades que guardan relación directa con tus intereses, preferencias y comodidad de desarrollo:", style_body))
+    story.append(Paragraph("Las siguientes áreas obtuvieron los puntajes porcentuales más destacados en tu cuestionario. Indican actividades que guardan relación directa con tus intereses, preferences y comodidad de desarrollo:", style_body))
     story.append(Spacer(1, 10))
     
     for area_item in lista_top_areas:
         nombre_area = area_item["area"]
         porcentaje_area = area_item["porcentaje"]
-        story.append(Paragraph(f"• {nombre_area} ({porcentaje_area}%)", style_area_title))
+        # CAMBIO CLAVE: Reemplazamos el caracter especial que generaba error por un guion normal
+        story.append(Paragraph(f"- {nombre_area} ({porcentaje_area}%)", style_area_title))
         story.append(Paragraph(f"<b>Descripción:</b> {DESCRIPCIONES[nombre_area]}", style_body))
         story.append(Spacer(1, 5))
         
@@ -258,7 +259,7 @@ if st.session_state.procesado:
             key="btn_descarga_pdf"
         )
     except Exception as e:
-        st.error(f"Hubo un detalle técnico con la descarga: {e}")
+        st.error(f"Hubo un detalle al estructurar el PDF: {e}")
 
 # --- PIE DE PÁGINA ---
 st.markdown("""
